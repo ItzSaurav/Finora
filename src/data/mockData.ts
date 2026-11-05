@@ -1,4 +1,16 @@
 import { Product, KhataCustomer, SupplierInvoice, AIPrediction, SaleTransaction } from '../types/merchant';
+import basmatiRiceImg from '../assets/images/product_basmati_rice_1793871804977.jpg';
+import mustardOilImg from '../assets/images/product_mustard_oil_1793871805047.jpg';
+import turmericImg from '../assets/images/product_spices_haldi_1793871804723.jpg';
+import attaImg from '../assets/images/product_chakki_atta_1793885072378.jpg';
+import tataSaltImg from '../assets/images/product_tata_salt_1793885073768.jpg';
+import amulButterImg from '../assets/images/product_amul_butter_1793885074702.jpg';
+import parleGImg from '../assets/images/product_parle_biscuit_1793885094520.jpg';
+import toorDalImg from '../assets/images/product_toor_dal_1793885074056.jpg';
+import surfExcelImg from '../assets/images/product_surf_detergent_1793885096298.jpg';
+import maggiImg from '../assets/images/product_maggi_noodles_1793885075800.jpg';
+import dettolImg from '../assets/images/product_dettol_soap_1793885096432.jpg';
+import sunflowerOilImg from '../assets/images/product_sunflower_oil_1793885098025.jpg';
 
 export const INITIAL_PRODUCTS: Product[] = [
   {
@@ -18,7 +30,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'low_stock',
     distributorName: 'Kailash Agro Wholesale',
     dailyVelocity: 4.2,
-    image: '/src/assets/images/product_basmati_rice_1793871804977.jpg',
+    image: basmatiRiceImg,
   },
   {
     id: 'prod-002',
@@ -37,7 +49,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Adani Wilmar Direct',
     dailyVelocity: 6.8,
-    image: '/src/assets/images/product_mustard_oil_1793871805047.jpg',
+    image: mustardOilImg,
   },
   {
     id: 'prod-003',
@@ -56,7 +68,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'expiring',
     distributorName: 'MDH Regional Depot',
     dailyVelocity: 2.1,
-    image: '/src/assets/images/product_spices_haldi_1793871804723.jpg',
+    image: turmericImg,
   },
   {
     id: 'prod-004',
@@ -75,7 +87,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'ITC Wholesale Hub',
     dailyVelocity: 8.5,
-    image: '/src/assets/images/product_chakki_atta_1793885072378.jpg',
+    image: attaImg,
   },
   {
     id: 'prod-005',
@@ -94,7 +106,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Tata Consumer Depot',
     dailyVelocity: 14.0,
-    image: '/src/assets/images/product_tata_salt_1793885073768.jpg',
+    image: tataSaltImg,
   },
   {
     id: 'prod-006',
@@ -113,7 +125,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Gujarat Milk Federation',
     dailyVelocity: 3.4,
-    image: '/src/assets/images/product_amul_butter_1793885074702.jpg',
+    image: amulButterImg,
   },
   {
     id: 'prod-007',
@@ -132,7 +144,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Metro Cash & Carry',
     dailyVelocity: 9.2,
-    image: '/src/assets/images/product_parle_biscuit_1793885094520.jpg',
+    image: parleGImg,
   },
   {
     id: 'prod-008',
@@ -151,7 +163,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'low_stock',
     distributorName: 'Kailash Agro Wholesale',
     dailyVelocity: 5.5,
-    image: '/src/assets/images/product_toor_dal_1793885074056.jpg',
+    image: toorDalImg,
   },
   {
     id: 'prod-009',
@@ -170,7 +182,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'dead_stock',
     distributorName: 'HUL Direct Agency',
     dailyVelocity: 0.6,
-    image: '/src/assets/images/product_surf_detergent_1793885096298.jpg',
+    image: surfExcelImg,
   },
   {
     id: 'prod-010',
@@ -189,7 +201,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Nestle City Supplier',
     dailyVelocity: 7.1,
-    image: '/src/assets/images/product_maggi_noodles_1793885075800.jpg',
+    image: maggiImg,
   },
   {
     id: 'prod-011',
@@ -208,7 +220,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Reckitt Distributor',
     dailyVelocity: 2.8,
-    image: '/src/assets/images/product_dettol_soap_1793885096432.jpg',
+    image: dettolImg,
   },
   {
     id: 'prod-012',
@@ -227,7 +239,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'low_stock',
     distributorName: 'Adani Wilmar Direct',
     dailyVelocity: 6.2,
-    image: '/src/assets/images/product_sunflower_oil_1793885098025.jpg',
+    image: sunflowerOilImg,
   }
 ];
 

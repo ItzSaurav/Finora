@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(({}) => {
   return {
-    base: '/KhataApp/', // 👈 Added this line for GitHub Pages subpath routing
+    base: '/Finora/', // Added this line for GitHub Pages subpath routing
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

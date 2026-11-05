@@ -497,19 +497,9 @@ export const POSCounter: React.FC<POSCounterProps> = ({
               cart.map((item) => (
                 <div
                   key={item.product.id}
-                  className="flex items-center justify-between p-2 rounded-lg bg-[#faf8ff] border border-[#eaedff] text-xs gap-2"
+                  className="flex items-center justify-between p-2 rounded-lg bg-[#faf8ff] border border-[#eaedff] text-xs"
                 >
-                  {item.product.image && (
-                    <div className="w-9 h-9 rounded bg-white border border-[#cbd5e1] overflow-hidden shrink-0">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0 pr-1">
+                  <div className="flex-1 min-w-0 pr-2">
                     <div className="font-bold text-[#131b2e] truncate">{item.product.name}</div>
                     <div className="text-[11px] text-[#64748b] font-mono-numbers">
                       ₹{item.product.sellingPrice} × {item.quantity} = ₹{item.product.sellingPrice * item.quantity}

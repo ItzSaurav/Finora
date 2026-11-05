@@ -1,5 +1,5 @@
 {
-  "name": "Vibrant Merchant Intelligence",
+  "name": "Finora",
   "description": "High-utility Kirana retail fintech & predictive inventory intelligence dashboard for neighborhood merchants.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

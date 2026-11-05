@@ -12,9 +12,6 @@ import {
   Truck,
   X,
   ArrowUpRight,
-  LayoutGrid,
-  List,
-  Eye,
 } from 'lucide-react';
 import { Product, ProductCategory, StockStatus } from '../types/merchant';
 import { sounds } from '../utils/audio';
@@ -37,8 +34,6 @@ export const InventoryIntelligence: React.FC<InventoryIntelligenceProps> = ({
   const [restockQty, setRestockQty] = useState<number>(20);
   const [isRestockSuccess, setIsRestockSuccess] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
-  const [previewProduct, setPreviewProduct] = useState<Product | null>(null);
 
   // New product form state
   const [newSku, setNewSku] = useState({
@@ -220,35 +215,8 @@ export const InventoryIntelligence: React.FC<InventoryIntelligenceProps> = ({
             />
           </div>
 
-          {/* Action buttons & View Mode Switcher */}
-          <div className="flex items-center gap-2.5 w-full md:w-auto justify-end">
-            <div className="flex items-center bg-[#f1f5f9] p-0.5 rounded-lg border border-[#cbd5e1]">
-              <button
-                type="button"
-                onClick={() => setViewMode('grid')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                  viewMode === 'grid'
-                    ? 'bg-white text-[#006948] shadow-xs'
-                    : 'text-[#64748b] hover:text-[#131b2e]'
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Visual Shelf (Photos)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('table')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${
-                  viewMode === 'table'
-                    ? 'bg-white text-[#006948] shadow-xs'
-                    : 'text-[#64748b] hover:text-[#131b2e]'
-                }`}
-              >
-                <List className="w-3.5 h-3.5" />
-                <span>Table List</span>
-              </button>
-            </div>
-
+          {/* Action buttons */}
+          <div className="flex items-center gap-2 w-full md:w-auto justify-end">
             <button
               onClick={() => setShowAddModal(true)}
               className="flex items-center gap-2 px-3.5 py-2 bg-[#006948] hover:bg-[#005137] text-white rounded-lg text-xs font-bold transition-colors shadow-xs cursor-pointer"
@@ -303,324 +271,156 @@ export const InventoryIntelligence: React.FC<InventoryIntelligenceProps> = ({
         </div>
       </div>
 
-      {/* Inventory Content Viewport: Grid vs Table */}
-      {viewMode === 'grid' ? (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredProducts.map((p) => {
-              const marginPct = (((p.sellingPrice - p.wholesaleCost) / p.sellingPrice) * 100).toFixed(1);
-              const isLow = p.currentStock <= p.safetyStock;
-
-              return (
-                <div
-                  key={p.id}
-                  className="bg-white border border-[#e2e8f0] hover:border-[#006948] rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
-                >
-                  {/* Product Packaging Image */}
-                  <div className="relative aspect-4/3 w-full bg-[#f8fafc] border-b border-[#f1f5f9] overflow-hidden">
-                    {p.image ? (
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#94a3b8]">
-                        <Package className="w-12 h-12 stroke-[1.5]" />
-                      </div>
-                    )}
-
-                    {/* Status Badge overlay */}
-                    <div className="absolute top-2.5 left-2.5">
-                      {p.status === 'expiring' ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#fffbeb] text-[#b45309] border border-[#fde68a] shadow-xs">
-                          Expiring Soon
-                        </span>
-                      ) : p.status === 'dead_stock' ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#fff1f2] text-[#be123c] border border-[#fecdd3] shadow-xs">
-                          Dead Capital
-                        </span>
-                      ) : isLow ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#fffbeb] text-[#b45309] border border-[#fde68a] shadow-xs">
-                          Low Stock ({p.currentStock} left)
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ecfdf5] text-[#047857] border border-[#a7f3d0] shadow-xs">
-                          Optimal Margin
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Quick Lightbox Zoom Button */}
-                    <button
-                      type="button"
-                      onClick={() => setPreviewProduct(p)}
-                      title="View High-Res Photo"
-                      className="absolute top-2.5 right-2.5 w-7 h-7 bg-white/90 hover:bg-white text-[#131b2e] rounded-full flex items-center justify-center shadow-xs transition-transform active:scale-95 cursor-pointer"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                    </button>
-
-                    <div className="absolute bottom-2 left-2.5 right-2.5 flex justify-between items-center text-[10px] font-mono-numbers px-2 py-0.5 bg-black/60 backdrop-blur-xs text-white rounded">
-                      <span>{p.sku}</span>
-                      <span>{p.packSize}</span>
-                    </div>
-                  </div>
-
-                  {/* Product Details Body */}
-                  <div className="p-3.5 space-y-2.5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="text-[10px] font-semibold text-[#006948] uppercase tracking-wider">
-                        {p.category}
-                      </div>
-                      <h3 className="font-bold text-xs text-[#131b2e] leading-snug line-clamp-2 mt-0.5">
-                        {p.name}
-                      </h3>
-                      <p className="text-[11px] text-[#006948] font-medium mt-0.5">
-                        {p.nameHindi}
-                      </p>
-                    </div>
-
-                    {/* Stock level bar */}
-                    <div className="space-y-1 pt-1 border-t border-[#f1f5f9]">
-                      <div className="flex justify-between items-center text-[11px]">
-                        <span className="text-[#64748b]">Shelf Units:</span>
-                        <span className="font-mono-numbers font-bold text-[#131b2e]">
-                          {p.currentStock}{' '}
-                          <span className="text-[10px] font-normal text-[#94a3b8]">
-                            (min {p.safetyStock})
-                          </span>
-                        </span>
-                      </div>
-                      <div className="w-full h-1.5 bg-[#f1f5f9] rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${
-                            isLow ? 'bg-amber-500' : 'bg-[#006948]'
-                          }`}
-                          style={{
-                            width: `${Math.min(100, (p.currentStock / (p.safetyStock * 1.5)) * 100)}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Pricing & Margin info */}
-                    <div className="pt-2 border-t border-[#f1f5f9] flex items-center justify-between font-mono-numbers">
-                      <div>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-sm font-extrabold text-[#006948]">
-                            ₹{p.sellingPrice}
-                          </span>
-                          {p.mrp > p.sellingPrice && (
-                            <span className="text-[10px] text-[#94a3b8] line-through">
-                              ₹{p.mrp}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[10px] text-[#64748b]">
-                          Cost: ₹{p.wholesaleCost}
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-xs font-bold text-[#006948]">
-                          {marginPct}%
-                        </div>
-                        <div className="text-[10px] text-[#059669] font-sans">
-                          Gross Margin
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="pt-2 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setPreviewProduct(p)}
-                        className="flex-1 py-1.5 text-xs font-semibold text-[#475569] bg-[#f1f5f9] hover:bg-[#e2e8f0] rounded-lg transition-colors cursor-pointer text-center"
-                      >
-                        Inspect Photo
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedProductForRestock(p);
-                          setRestockQty(p.safetyStock * 2);
-                        }}
-                        className="flex-1 py-1.5 text-xs font-bold text-white bg-[#006948] hover:bg-[#005137] rounded-lg transition-colors cursor-pointer text-center shadow-xs"
-                      >
-                        + Restock
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : (
-        /* High-Density Inventory Table */
-        <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-[#f8fafc] border-b border-[#e2e8f0] text-[#475569] font-bold">
+      {/* High-Density Inventory Table */}
+      <div className="bg-white border border-[#e2e8f0] rounded-xl shadow-xs overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-[#f8fafc] border-b border-[#e2e8f0] text-[#475569] font-bold">
+              <tr>
+                <th className="py-3 px-4">Item & Hindi Description</th>
+                <th className="py-3 px-3">Category</th>
+                <th className="py-3 px-3">Barcode / SKU</th>
+                <th className="py-3 px-3 text-right">Wholesale Cost</th>
+                <th className="py-3 px-3 text-right">Selling (MRP)</th>
+                <th className="py-3 px-3 text-right">Gross Margin</th>
+                <th className="py-3 px-3 text-center">Stock Level</th>
+                <th className="py-3 px-3">Status</th>
+                <th className="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#f1f5f9] font-sans">
+              {filteredProducts.length === 0 ? (
                 <tr>
-                  <th className="py-3 px-4">Item & Product Photo</th>
-                  <th className="py-3 px-3">Category</th>
-                  <th className="py-3 px-3">Barcode / SKU</th>
-                  <th className="py-3 px-3 text-right">Wholesale Cost</th>
-                  <th className="py-3 px-3 text-right">Selling (MRP)</th>
-                  <th className="py-3 px-3 text-right">Gross Margin</th>
-                  <th className="py-3 px-3 text-center">Stock Level</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <td colSpan={9} className="py-12 text-center text-[#94a3b8]">
+                    No inventory items matched your filter criteria.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-[#f1f5f9] font-sans">
-                {filteredProducts.length === 0 ? (
-                  <tr>
-                    <td colSpan={9} className="py-12 text-center text-[#94a3b8]">
-                      No inventory items matched your filter criteria.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredProducts.map((p) => {
-                    const marginPct = (((p.sellingPrice - p.wholesaleCost) / p.sellingPrice) * 100).toFixed(1);
-                    const isLow = p.currentStock <= p.safetyStock;
+              ) : (
+                filteredProducts.map((p) => {
+                  const marginPct = (((p.sellingPrice - p.wholesaleCost) / p.sellingPrice) * 100).toFixed(1);
+                  const isLow = p.currentStock <= p.safetyStock;
 
-                    return (
-                      <tr key={p.id} className="hover:bg-[#faf8ff] transition-colors">
-                        {/* Product Name & Clickable Packshot */}
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-3">
-                            <button
-                              type="button"
-                              onClick={() => setPreviewProduct(p)}
-                              title="Click to view full packaging photo"
-                              className="w-12 h-12 rounded-lg bg-[#f1f5f9] border border-[#e2e8f0] overflow-hidden shrink-0 flex items-center justify-center relative group cursor-pointer"
-                            >
-                              {p.image ? (
-                                <>
-                                  <img
-                                    src={p.image}
-                                    alt={p.name}
-                                    referrerPolicy="no-referrer"
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
-                                  />
-                                  <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
-                                    <Eye className="w-3.5 h-3.5" />
-                                  </div>
-                                </>
-                              ) : (
-                                <Package className="w-5 h-5 text-[#94a3b8]" />
-                              )}
-                            </button>
-                            <div className="min-w-0">
-                              <div className="font-bold text-[#131b2e] leading-tight">{p.name}</div>
-                              <div className="text-[11px] text-[#006948] font-medium">{p.nameHindi}</div>
-                              <div className="text-[10px] text-[#64748b]">{p.packSize}</div>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Category */}
-                        <td className="py-3 px-3 text-[#475569] whitespace-nowrap">{p.category}</td>
-
-                        {/* Barcode / SKU */}
-                        <td className="py-3 px-3 font-mono-numbers text-[#64748b] whitespace-nowrap">
-                          <div className="text-[11px] text-[#131b2e] font-semibold">{p.barcode}</div>
-                          <div className="text-[10px] text-[#94a3b8]">{p.sku}</div>
-                        </td>
-
-                        {/* Wholesale Cost */}
-                        <td className="py-3 px-3 text-right font-mono-numbers text-[#475569] whitespace-nowrap">
-                          ₹{p.wholesaleCost}
-                        </td>
-
-                        {/* Selling / MRP */}
-                        <td className="py-3 px-3 text-right font-mono-numbers whitespace-nowrap">
-                          <span className="font-bold text-[#131b2e]">₹{p.sellingPrice}</span>
-                          {p.mrp > p.sellingPrice && (
-                            <span className="ml-1 text-[10px] text-[#94a3b8] line-through">₹{p.mrp}</span>
-                          )}
-                        </td>
-
-                        {/* Margin % */}
-                        <td className="py-3 px-3 text-right font-mono-numbers whitespace-nowrap font-bold">
-                          <span
-                            className={
-                              Number(marginPct) >= 15
-                                ? 'text-[#006948]'
-                                : Number(marginPct) >= 10
-                                ? 'text-[#d97706]'
-                                : 'text-[#e11d48]'
-                            }
-                          >
-                            {marginPct}%
-                          </span>
-                        </td>
-
-                        {/* Stock Level */}
-                        <td className="py-3 px-3 text-center whitespace-nowrap">
-                          <div className="inline-flex flex-col items-center">
-                            <span className="font-mono-numbers font-bold text-sm text-[#131b2e]">
-                              {p.currentStock}{' '}
-                              <span className="text-[10px] font-normal text-[#64748b]">/ {p.safetyStock} min</span>
-                            </span>
-                            <div className="w-16 h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden mt-1">
-                              <div
-                                className={`h-full rounded-full ${
-                                  isLow ? 'bg-amber-500' : 'bg-[#006948]'
-                                }`}
-                                style={{ width: `${Math.min(100, (p.currentStock / (p.safetyStock * 1.5)) * 100)}%` }}
+                  return (
+                    <tr key={p.id} className="hover:bg-[#faf8ff] transition-colors">
+                      {/* Product Name & Packshot */}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-[#f1f5f9] border border-[#e2e8f0] overflow-hidden shrink-0 flex items-center justify-center">
+                            {p.image ? (
+                              <img
+                                src={p.image}
+                                alt={p.name}
+                                referrerPolicy="no-referrer"
+                                className="w-full h-full object-cover"
                               />
-                            </div>
+                            ) : (
+                              <Package className="w-5 h-5 text-[#94a3b8]" />
+                            )}
                           </div>
-                        </td>
+                          <div className="min-w-0">
+                            <div className="font-bold text-[#131b2e] leading-tight">{p.name}</div>
+                            <div className="text-[11px] text-[#006948] font-medium">{p.nameHindi}</div>
+                            <div className="text-[10px] text-[#64748b]">{p.packSize}</div>
+                          </div>
+                        </div>
+                      </td>
 
-                        {/* Status Badges */}
-                        <td className="py-3 px-3 whitespace-nowrap">
-                          {p.status === 'expiring' ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fffbeb] text-[#b45309] border border-[#fde68a]">
-                              Expiring Soon
-                            </span>
-                          ) : p.status === 'dead_stock' ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fff1f2] text-[#be123c] border border-[#fecdd3]">
-                              Dead Capital
-                            </span>
-                          ) : isLow ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fffbeb] text-[#b45309] border border-[#fde68a]">
-                              Low Stock
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#047857] border border-[#a7f3d0]">
-                              Optimal Margin
-                            </span>
-                          )}
-                        </td>
+                      {/* Category */}
+                      <td className="py-3 px-3 text-[#475569] whitespace-nowrap">{p.category}</td>
 
-                        {/* Restock Action */}
-                        <td className="py-3 px-4 text-right whitespace-nowrap">
-                          <button
-                            onClick={() => {
-                              setSelectedProductForRestock(p);
-                              setRestockQty(p.safetyStock * 2);
-                            }}
-                            className="px-2.5 py-1 text-xs font-bold text-[#006948] bg-[#ecfdf5] hover:bg-[#006948] hover:text-white rounded-md transition-colors cursor-pointer"
-                          >
-                            + Restock PO
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+                      {/* Barcode / SKU */}
+                      <td className="py-3 px-3 font-mono-numbers text-[#64748b] whitespace-nowrap">
+                        <div className="text-[11px] text-[#131b2e] font-semibold">{p.barcode}</div>
+                        <div className="text-[10px] text-[#94a3b8]">{p.sku}</div>
+                      </td>
+
+                      {/* Wholesale Cost */}
+                      <td className="py-3 px-3 text-right font-mono-numbers text-[#475569] whitespace-nowrap">
+                        ₹{p.wholesaleCost}
+                      </td>
+
+                      {/* Selling / MRP */}
+                      <td className="py-3 px-3 text-right font-mono-numbers whitespace-nowrap">
+                        <span className="font-bold text-[#131b2e]">₹{p.sellingPrice}</span>
+                        {p.mrp > p.sellingPrice && (
+                          <span className="ml-1 text-[10px] text-[#94a3b8] line-through">₹{p.mrp}</span>
+                        )}
+                      </td>
+
+                      {/* Margin % */}
+                      <td className="py-3 px-3 text-right font-mono-numbers whitespace-nowrap font-bold">
+                        <span
+                          className={
+                            Number(marginPct) >= 15
+                              ? 'text-[#006948]'
+                              : Number(marginPct) >= 10
+                              ? 'text-[#d97706]'
+                              : 'text-[#e11d48]'
+                          }
+                        >
+                          {marginPct}%
+                        </span>
+                      </td>
+
+                      {/* Stock Level */}
+                      <td className="py-3 px-3 text-center whitespace-nowrap">
+                        <div className="inline-flex flex-col items-center">
+                          <span className="font-mono-numbers font-bold text-sm text-[#131b2e]">
+                            {p.currentStock}{' '}
+                            <span className="text-[10px] font-normal text-[#64748b]">/ {p.safetyStock} min</span>
+                          </span>
+                          <div className="w-16 h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden mt-1">
+                            <div
+                              className={`h-full rounded-full ${
+                                isLow ? 'bg-amber-500' : 'bg-[#006948]'
+                              }`}
+                              style={{ width: `${Math.min(100, (p.currentStock / (p.safetyStock * 1.5)) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Status Badges conforming to design system */}
+                      <td className="py-3 px-3 whitespace-nowrap">
+                        {p.status === 'expiring' ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fffbeb] text-[#b45309] border border-[#fde68a]">
+                            Expiring Soon
+                          </span>
+                        ) : p.status === 'dead_stock' ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fff1f2] text-[#be123c] border border-[#fecdd3]">
+                            Dead Capital
+                          </span>
+                        ) : isLow ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fffbeb] text-[#b45309] border border-[#fde68a]">
+                            Low Stock
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#047857] border border-[#a7f3d0]">
+                            Optimal Margin
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Restock Action */}
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
+                        <button
+                          onClick={() => {
+                            setSelectedProductForRestock(p);
+                            setRestockQty(p.safetyStock * 2);
+                          }}
+                          className="px-2.5 py-1 text-xs font-bold text-[#006948] bg-[#ecfdf5] hover:bg-[#006948] hover:text-white rounded-md transition-colors cursor-pointer"
+                        >
+                          + Restock PO
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
-      )}
+      </div>
 
       {/* Restock Order Drawer / Modal */}
       {selectedProductForRestock && (
@@ -640,26 +440,14 @@ export const InventoryIntelligence: React.FC<InventoryIntelligenceProps> = ({
             </div>
 
             <form onSubmit={handleExecuteRestock} className="p-5 space-y-4 text-xs">
-              <div className="bg-[#f8fafc] p-3 rounded-lg border border-[#e2e8f0] flex gap-3 items-center">
-                {selectedProductForRestock.image && (
-                  <div className="w-16 h-16 rounded-lg bg-white border border-[#cbd5e1] overflow-hidden shrink-0 shadow-xs">
-                    <img
-                      src={selectedProductForRestock.image}
-                      alt={selectedProductForRestock.name}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="space-y-0.5 min-w-0">
-                  <div className="font-bold text-[#131b2e] text-sm truncate">{selectedProductForRestock.name}</div>
-                  <div className="text-[#006948] font-medium">{selectedProductForRestock.nameHindi}</div>
-                  <div className="text-[11px] text-[#64748b]">
-                    Distributor: <span className="font-semibold text-[#131b2e]">{selectedProductForRestock.distributorName}</span>
-                  </div>
-                  <div className="text-[11px] text-[#64748b] font-mono-numbers">
-                    Stock: {selectedProductForRestock.currentStock} units · Threshold: {selectedProductForRestock.safetyStock} units
-                  </div>
+              <div className="bg-[#f8fafc] p-3 rounded-lg border border-[#e2e8f0] space-y-1">
+                <div className="font-bold text-[#131b2e] text-sm">{selectedProductForRestock.name}</div>
+                <div className="text-[#006948] font-medium">{selectedProductForRestock.nameHindi}</div>
+                <div className="text-[11px] text-[#64748b]">
+                  Distributor: <span className="font-semibold text-[#131b2e]">{selectedProductForRestock.distributorName}</span>
+                </div>
+                <div className="text-[11px] text-[#64748b] font-mono-numbers">
+                  Current Stock: {selectedProductForRestock.currentStock} units · Threshold: {selectedProductForRestock.safetyStock} units
                 </div>
               </div>
 
@@ -861,107 +649,6 @@ export const InventoryIntelligence: React.FC<InventoryIntelligenceProps> = ({
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* Product Image Lightbox Modal */}
-      {previewProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-[#cbd5e1] overflow-hidden flex flex-col">
-            <div className="p-4 bg-[#f8fafc] border-b border-[#e2e8f0] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#006948]" />
-                <h3 className="font-bold text-[#131b2e] text-sm">Product Packaging Spec & Photo</h3>
-              </div>
-              <button
-                onClick={() => setPreviewProduct(null)}
-                className="p-1 rounded-md text-[#64748b] hover:text-[#0f172a] hover:bg-[#e2e8f0] cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-5 space-y-4">
-              {/* High-Res Image Display */}
-              <div className="aspect-4/3 w-full rounded-xl bg-[#f8fafc] border border-[#e2e8f0] overflow-hidden shadow-inner flex items-center justify-center">
-                {previewProduct.image ? (
-                  <img
-                    src={previewProduct.image}
-                    alt={previewProduct.name}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Package className="w-16 h-16 text-[#94a3b8]" />
-                )}
-              </div>
-
-              {/* Product Info Breakdown */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-base font-bold text-[#131b2e] leading-snug">
-                      {previewProduct.name}
-                    </h2>
-                    <p className="text-xs font-semibold text-[#006948] mt-0.5">
-                      {previewProduct.nameHindi}
-                    </p>
-                    <p className="text-xs text-[#64748b] mt-0.5">
-                      {previewProduct.packSize} · Category: {previewProduct.category}
-                    </p>
-                  </div>
-                  <span className="font-mono-numbers px-2.5 py-1 bg-[#f1f5f9] rounded text-xs font-bold text-[#131b2e] border border-[#e2e8f0]">
-                    {previewProduct.barcode}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-[#f1f5f9] font-mono-numbers text-xs">
-                  <div className="bg-[#f8fafc] p-2.5 rounded-lg border border-[#e2e8f0]">
-                    <div className="text-[10px] text-[#64748b] font-sans">Wholesale Cost</div>
-                    <div className="font-bold text-sm text-[#131b2e]">₹{previewProduct.wholesaleCost}</div>
-                  </div>
-                  <div className="bg-[#f8fafc] p-2.5 rounded-lg border border-[#e2e8f0]">
-                    <div className="text-[10px] text-[#64748b] font-sans">Retail MRP</div>
-                    <div className="font-bold text-sm text-[#006948]">₹{previewProduct.sellingPrice}</div>
-                  </div>
-                  <div className="bg-[#ecfdf5] p-2.5 rounded-lg border border-[#a7f3d0]">
-                    <div className="text-[10px] text-[#047857] font-sans">Gross Margin</div>
-                    <div className="font-bold text-sm text-[#006948]">
-                      {(((previewProduct.sellingPrice - previewProduct.wholesaleCost) / previewProduct.sellingPrice) * 100).toFixed(1)}%
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#f8fafc] p-2.5 rounded-lg border border-[#e2e8f0] flex justify-between items-center text-xs">
-                  <span className="text-[#64748b]">Distributor Agency:</span>
-                  <span className="font-semibold text-[#131b2e]">{previewProduct.distributorName}</span>
-                </div>
-              </div>
-
-              {/* Action buttons */}
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#e2e8f0]">
-                <button
-                  type="button"
-                  onClick={() => setPreviewProduct(null)}
-                  className="px-4 py-2 text-xs font-semibold text-[#64748b] hover:text-[#0f172a] cursor-pointer"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const prod = previewProduct;
-                    setPreviewProduct(null);
-                    setSelectedProductForRestock(prod);
-                    setRestockQty(prod.safetyStock * 2);
-                  }}
-                  className="px-4 py-2 bg-[#006948] hover:bg-[#005137] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shadow-xs"
-                >
-                  Create Restock PO
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       )}
