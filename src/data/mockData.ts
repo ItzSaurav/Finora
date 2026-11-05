@@ -2,15 +2,15 @@ import { Product, KhataCustomer, SupplierInvoice, AIPrediction, SaleTransaction 
 import basmatiRiceImg from '../assets/images/product_basmati_rice_1793871804977.jpg';
 import mustardOilImg from '../assets/images/product_mustard_oil_1793871805047.jpg';
 import turmericImg from '../assets/images/product_spices_haldi_1793871804723.jpg';
-import attaImg from '../assets/images/product_atta.jpg';
-import tataSaltImg from '../assets/images/product_tata_salt.jpg';
-import amulButterImg from '../assets/images/product_amul_butter.jpg';
-import parleGImg from '../assets/images/product_parle_g.jpg';
-import toorDalImg from '../assets/images/product_toor_dal.jpg';
-import surfExcelImg from '../assets/images/product_surf_excel.jpg';
-import maggiImg from '../assets/images/product_maggi.jpg';
-import dettolImg from '../assets/images/product_dettol.jpg';
-import sunflowerOilImg from '../assets/images/product_sunflower_oil.jpg';
+import attaImg from '../assets/images/product_chakki_atta_1793885072378.jpg';
+import tataSaltImg from '../assets/images/product_tata_salt_1793885073768.jpg';
+import amulButterImg from '../assets/images/product_amul_butter_1793885074702.jpg';
+import parleGImg from '../assets/images/product_parle_biscuit_1793885094520.jpg';
+import toorDalImg from '../assets/images/product_toor_dal_1793885074056.jpg';
+import surfExcelImg from '../assets/images/product_surf_detergent_1793885096298.jpg';
+import maggiImg from '../assets/images/product_maggi_noodles_1793885075800.jpg';
+import dettolImg from '../assets/images/product_dettol_soap_1793885096432.jpg';
+import sunflowerOilImg from '../assets/images/product_sunflower_oil_1793885098025.jpg';
 
 export const INITIAL_PRODUCTS: Product[] = [
   {
