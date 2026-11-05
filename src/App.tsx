@@ -15,6 +15,7 @@ import { KhataLedger } from './components/KhataLedger';
 import { SupplierInvoices } from './components/SupplierInvoices';
 import { sounds } from './utils/audio';
 import { MapPin, ShieldCheck, Sparkles, Store } from 'lucide-react';
+import merchantAvatar from './assets/images/kirana_merchant_avatar_1793871803596.jpg';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('counter');
@@ -162,7 +163,7 @@ export default function App() {
             {/* Merchant Avatar */}
             <div className="w-10 h-10 rounded-full border-2 border-[#006948] overflow-hidden shrink-0 shadow-xs">
               <img
-                src="/src/assets/images/kirana_merchant_avatar_1793871803596.jpg"
+                src={merchantAvatar}
                 alt="Proprietor"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
@@ -251,8 +252,12 @@ export default function App() {
       {/* Minimal Footer */}
       <footer className="bg-white border-t border-[#e2e8f0] py-4 px-6 text-center text-xs text-[#64748b]">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div>
-            Finora © 2026 · Built for Indian Retail Kirana Merchants
+          <div className="flex items-center gap-1.5 flex-wrap justify-center">
+            <span>Finora © 2026 · Built by</span>
+            <a href="https://github.com/ItzSaurav" target="_blank" rel="noreferrer" className="text-[#006948] hover:underline font-semibold">Saurav</a>
+            <span>&</span>
+            <a href="https://github.com/omar8307" target="_blank" rel="noreferrer" className="text-[#006948] hover:underline font-semibold">Omar</a>
+            <span>for Kirana Merchants</span>
           </div>
           <div className="flex items-center gap-4 text-[11px]">
             <span>Fast Billing Hotkey: [F2]</span>
