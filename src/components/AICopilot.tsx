@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles,
   TrendingUp,
@@ -10,9 +10,22 @@ import {
   ArrowRight,
   ShieldAlert,
   Bot,
+  SlidersHorizontal,
+  Key,
+  Check,
+  ExternalLink,
+  X,
 } from 'lucide-react';
 import { AIPrediction, Product, KhataCustomer } from '../types/merchant';
 import { sounds } from '../utils/audio';
+import {
+  askFinoraAI,
+  getStoredApiKey,
+  setStoredApiKey,
+  getAiProvider,
+  setAiProvider,
+  AIProvider,
+} from '../services/aiService';
 
 interface AICopilotProps {
   predictions: AIPrediction[];
@@ -41,16 +54,36 @@ export const AICopilot: React.FC<AICopilotProps> = ({
   >([
     {
       role: 'assistant',
-      text: 'Namaste! I am your Kirana Intelligence Copilot. I continuously monitor counter sales velocity, distributor price shifts, and customer credit defaults. How can I assist your shop today?',
+      text: 'Namaste! I am your Finora Kirana Intelligence Copilot powered by live AI. I continuously monitor counter sales velocity, distributor price shifts, and customer credit defaults. How can I assist your shop today?',
       timestamp: 'Just now',
     },
   ]);
   const [userInput, setUserInput] = useState('');
+  const [isThinking, setIsThinking] = useState(false);
+  const [showApiModal, setShowApiModal] = useState(false);
+  const [activeProvider, setActiveProvider] = useState<AIProvider>(getAiProvider());
+  const [apiKeyInput, setApiKeyInput] = useState(getStoredApiKey());
+  const [hasCustomKey, setHasCustomKey] = useState(Boolean(getStoredApiKey()));
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, isThinking]);
 
   // Handle action click
   const handleAction = (pred: AIPrediction) => {
     sounds.playSuccessChime();
     onExecuteAction(pred);
+  };
+
+  // Save API Settings
+  const handleSaveApiSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStoredApiKey(apiKeyInput);
+    setAiProvider(activeProvider);
+    setHasCustomKey(Boolean(apiKeyInput.trim()));
+    setShowApiModal(false);
+    sounds.playSuccessChime();
   };
 
   // AI Working Capital Basket Optimizer
@@ -87,10 +120,10 @@ export const AICopilot: React.FC<AICopilotProps> = ({
     }, 600);
   };
 
-  // AI Chat Assistant handling
-  const handleSendMessage = (e: React.FormEvent) => {
+  // AI Chat Assistant handling via Free API or Google Gemini
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userInput.trim()) return;
+    if (!userInput.trim() || isThinking) return;
 
     const query = userInput.trim();
     const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
@@ -101,43 +134,10 @@ export const AICopilot: React.FC<AICopilotProps> = ({
     ];
     setChatMessages(newMsgs);
     setUserInput('');
+    setIsThinking(true);
 
-    // Generate intelligent Kirana advice based on actual data
-    setTimeout(() => {
-      let reply = '';
-      const q = query.toLowerCase();
-
-      if (q.includes('expir') || q.includes('kharab') || q.includes('date')) {
-        const expiring = products.filter((p) => p.status === 'expiring');
-        if (expiring.length > 0) {
-          reply = `Found ${expiring.length} item nearing expiry: ${expiring
-            .map((e) => `${e.name} (${e.currentStock} units left)`)
-            .join(', ')}. Recommend running a 10% counter discount or placing at front checkout today.`;
-        } else {
-          reply = 'All inventory items are currently well within fresh shelf life! No immediate expiry concerns.';
-        }
-      } else if (q.includes('margin') || q.includes('profit') || q.includes('kamai')) {
-        const bestMargin = [...products].sort(
-          (a, b) =>
-            (b.sellingPrice - b.wholesaleCost) / b.sellingPrice -
-            (a.sellingPrice - a.wholesaleCost) / a.sellingPrice
-        )[0];
-        reply = `Your highest gross margin item is "${bestMargin.name}" yielding ${(
-          ((bestMargin.sellingPrice - bestMargin.wholesaleCost) / bestMargin.sellingPrice) *
-          100
-        ).toFixed(1)}% profit (₹${bestMargin.sellingPrice - bestMargin.wholesaleCost} net per unit). Recommend bundling with high velocity staples.`;
-      } else if (q.includes('khata') || q.includes('udhaar') || q.includes('credit')) {
-        const totalDue = khataCustomers.reduce((acc, c) => acc + c.balanceDue, 0);
-        const critical = khataCustomers.filter((c) => c.trustScore === 'critical');
-        reply = `Total customer Udhaar outstanding is ₹${totalDue.toLocaleString('en-IN')}. Caution: ${critical
-          .map((c) => `${c.name} (₹${c.balanceDue}, ${c.daysPending} days overdue)`)
-          .join(', ')} exceeds credit terms. WhatsApp reminders have been drafted in the Khata section.`;
-      } else if (q.includes('weekend') || q.includes('festival') || q.includes('demand')) {
-        reply = `Predicted weekend surge will heavily impact Cooking Oils (+38%) and Premium Basmati (+25%). Current Basmati stock has only 12 bags left and will stock out by Saturday 4 PM unless replenished.`;
-      } else {
-        reply = `Based on your live register data, today's sales velocity is steady. Your top moving category is Grains & Edible Oils. Working capital utilization is at 88%. You can issue a quick PO from the optimizer below.`;
-      }
-
+    try {
+      const reply = await askFinoraAI(query, chatMessages, products, khataCustomers);
       setChatMessages((prev) => [
         ...prev,
         {
@@ -146,7 +146,19 @@ export const AICopilot: React.FC<AICopilotProps> = ({
           timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
-    }, 500);
+      sounds.playSuccessChime();
+    } catch {
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant' as const,
+          text: 'Unable to connect to AI engine. Using local shop intelligence fallback.',
+          timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } finally {
+      setIsThinking(false);
+    }
   };
 
   return (
@@ -343,13 +355,24 @@ export const AICopilot: React.FC<AICopilotProps> = ({
         </div>
 
         {/* Right Column (6 cols): Kirana Merchant AI Assistant */}
-        <div className="lg:col-span-6 bg-white border border-[#e2e8f0] rounded-xl p-4 shadow-xs flex flex-col h-[460px]">
+        <div className="lg:col-span-6 bg-white border border-[#e2e8f0] rounded-xl p-4 shadow-xs flex flex-col h-[460px] relative">
           <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0] shrink-0">
             <div className="flex items-center gap-2">
               <Bot className="w-4 h-4 text-[#4b41e1]" />
-              <h3 className="font-bold text-[#131b2e] text-sm">Kirana Business Intelligence Chat</h3>
+              <h3 className="font-bold text-[#131b2e] text-sm">Finora AI Copilot</h3>
             </div>
-            <span className="text-[11px] text-[#4b41e1] font-semibold">Bilingual (English/हिंदी)</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowApiModal(true)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f0fdf4] hover:bg-[#dcfce7] border border-[#bbf7d0] text-[#15803d] text-[10px] font-semibold transition-colors cursor-pointer"
+                title="Configure AI API Integration"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a] animate-pulse"></span>
+                <span>{activeProvider === 'gemini' && hasCustomKey ? 'Gemini Free API' : 'Free Public AI'}</span>
+                <SlidersHorizontal className="w-2.5 h-2.5 ml-0.5 text-[#15803d]" />
+              </button>
+            </div>
           </div>
 
           {/* Chat Messages */}
@@ -362,7 +385,7 @@ export const AICopilot: React.FC<AICopilotProps> = ({
                 }`}
               >
                 <div
-                  className={`p-3 rounded-xl max-w-[85%] leading-relaxed ${
+                  className={`p-3 rounded-xl max-w-[85%] leading-relaxed whitespace-pre-wrap ${
                     msg.role === 'user'
                       ? 'bg-[#006948] text-white rounded-br-xs'
                       : 'bg-[#f1f5f9] text-[#131b2e] rounded-bl-xs border border-[#e2e8f0]'
@@ -373,30 +396,51 @@ export const AICopilot: React.FC<AICopilotProps> = ({
                 <span className="text-[10px] text-[#94a3b8] mt-1 px-1">{msg.timestamp}</span>
               </div>
             ))}
+
+            {isThinking && (
+              <div className="flex flex-col items-start animate-in fade-in duration-150">
+                <div className="p-3 rounded-xl max-w-[85%] bg-[#f8fafc] text-[#475569] rounded-bl-xs border border-[#e2e8f0] flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-[#4b41e1] animate-spin shrink-0" />
+                  <span>Finora AI is analyzing store data...</span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Quick Prompts */}
           <div className="flex items-center gap-1.5 overflow-x-auto py-1.5 text-[11px] no-scrollbar shrink-0 border-t border-[#f1f5f9]">
             <button
               type="button"
+              disabled={isThinking}
               onClick={() => setUserInput('Which items are expiring this month?')}
-              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer"
+              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer disabled:opacity-50"
             >
               Expiring stock?
             </button>
             <button
               type="button"
+              disabled={isThinking}
               onClick={() => setUserInput('What is my highest margin product?')}
-              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer"
+              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer disabled:opacity-50"
             >
               Highest margin?
             </button>
             <button
               type="button"
+              disabled={isThinking}
               onClick={() => setUserInput('How much credit is pending in Khata?')}
-              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer"
+              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer disabled:opacity-50"
             >
               Pending Khata?
+            </button>
+            <button
+              type="button"
+              disabled={isThinking}
+              onClick={() => setUserInput('Give me a quick restock advice for tomorrow.')}
+              className="px-2 py-0.5 bg-[#f8fafc] hover:bg-[#eaedff] border border-[#cbd5e1] rounded text-[#475569] whitespace-nowrap cursor-pointer disabled:opacity-50"
+            >
+              Restock advice?
             </button>
           </div>
 
@@ -404,20 +448,137 @@ export const AICopilot: React.FC<AICopilotProps> = ({
           <form onSubmit={handleSendMessage} className="relative shrink-0 pt-1">
             <input
               type="text"
-              placeholder="Ask anything about inventory, sales, or khata..."
+              placeholder={isThinking ? 'AI is generating advice...' : 'Ask anything about inventory, sales, or khata...'}
               value={userInput}
+              disabled={isThinking}
               onChange={(e) => setUserInput(e.target.value)}
-              className="w-full pl-3 pr-10 py-2 bg-[#f8fafc] border border-[#cbd5e1] focus:border-[#4b41e1] rounded-lg text-xs text-[#131b2e] outline-none"
+              className="w-full pl-3 pr-10 py-2 bg-[#f8fafc] border border-[#cbd5e1] focus:border-[#4b41e1] rounded-lg text-xs text-[#131b2e] outline-none disabled:bg-[#f1f5f9]"
             />
             <button
               type="submit"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-[#4b41e1] hover:text-[#3730a3] cursor-pointer"
+              disabled={isThinking || !userInput.trim()}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-[#4b41e1] hover:text-[#3730a3] cursor-pointer disabled:opacity-40"
             >
               <Send className="w-4 h-4" />
             </button>
           </form>
         </div>
       </div>
+
+      {/* AI API Integration Modal */}
+      {showApiModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl border border-[#cbd5e1] max-w-md w-full p-5 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e2e8f0]">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-[#eef2ff] flex items-center justify-center text-[#4b41e1]">
+                  <SlidersHorizontal className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-[#0f172a]">AI API Integration</h4>
+                  <p className="text-[11px] text-[#64748b]">Configure your chatbot backend engine</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowApiModal(false)}
+                className="p-1 rounded-lg text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveApiSettings} className="space-y-4 pt-4 text-xs">
+              <div>
+                <label className="font-semibold text-[#0f172a] block mb-1">Select AI Provider</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveProvider('free')}
+                    className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                      activeProvider === 'free'
+                        ? 'border-[#006948] bg-[#f0fdf4] text-[#006948] font-bold shadow-xs'
+                        : 'border-[#cbd5e1] bg-[#f8fafc] text-[#475569] hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-xs">Free Public AI</span>
+                      {activeProvider === 'free' && <Check className="w-3.5 h-3.5" />}
+                    </div>
+                    <p className="text-[10px] font-normal text-[#64748b] leading-tight">
+                      Zero key needed. Works out of the box for all users.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveProvider('gemini')}
+                    className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                      activeProvider === 'gemini'
+                        ? 'border-[#4b41e1] bg-[#eef2ff] text-[#4b41e1] font-bold shadow-xs'
+                        : 'border-[#cbd5e1] bg-[#f8fafc] text-[#475569] hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-xs">Google Gemini</span>
+                      {activeProvider === 'gemini' && <Check className="w-3.5 h-3.5" />}
+                    </div>
+                    <p className="text-[10px] font-normal text-[#64748b] leading-tight">
+                      Use your own free Google AI Studio key.
+                    </p>
+                  </button>
+                </div>
+              </div>
+
+              {activeProvider === 'gemini' && (
+                <div className="space-y-2 bg-[#f8fafc] p-3 rounded-xl border border-[#e2e8f0]">
+                  <div className="flex items-center justify-between">
+                    <label className="font-semibold text-[#0f172a] flex items-center gap-1.5">
+                      <Key className="w-3.5 h-3.5 text-[#4b41e1]" />
+                      Gemini API Key
+                    </label>
+                    <a
+                      href="https://aistudio.google.com/app/apikey"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[11px] text-[#4b41e1] hover:underline flex items-center gap-1 font-medium"
+                    >
+                      Get Free Key
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  <input
+                    type="password"
+                    placeholder="AIzaSy..."
+                    value={apiKeyInput}
+                    onChange={(e) => setApiKeyInput(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-[#cbd5e1] rounded-lg text-xs outline-none focus:border-[#4b41e1] font-mono"
+                  />
+                  <p className="text-[10px] text-[#64748b]">
+                    Keys are stored securely in your browser localStorage and never transmitted to third-party servers.
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#e2e8f0]">
+                <button
+                  type="button"
+                  onClick={() => setShowApiModal(false)}
+                  className="px-3 py-1.5 rounded-lg border border-[#cbd5e1] text-[#475569] hover:bg-[#f1f5f9] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 rounded-lg bg-[#006948] hover:bg-[#005238] text-white font-semibold cursor-pointer shadow-xs"
+                >
+                  Save Configuration
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

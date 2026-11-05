@@ -8,7 +8,7 @@ Live Demo: [https://itzsaurav.github.io/Finora/](https://itzsaurav.github.io/Fin
 
 - **Counter POS**: High-speed counter billing with SKU/barcode lookup, hotkey support (F2), and cash/UPI/Khata payment handling.
 - **Inventory Intelligence**: Real-time stock status, safety stock alerts, expiration monitoring, and velocity calculations.
-- **AI Demand Forecast**: Predictive demand sensing for holiday surges, stockout defense, and distributor price arbitrage.
+- **AI Copilot & Demand Forecast**: Real-time business intelligence chat powered by free AI API integration (with optional Google Gemini API support), providing live inventory reasoning, restock advice, expiry alerts, and working capital optimization.
 - **Khata Ledger**: Digital customer credit accounting, automated WhatsApp payment reminder drafts, and credit limit tracking.
 - **Supplier Invoices & UPI**: Wholesale distributor invoice registry with one-click UPI QR settlements.
 
