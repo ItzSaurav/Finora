@@ -314,9 +314,19 @@ export const AICopilot: React.FC<AICopilotProps> = ({
                 {optimizedPlan.items.map((it, idx) => (
                   <div
                     key={idx}
-                    className="flex justify-between items-center p-2 rounded bg-white border border-[#e2e8f0]"
+                    className="flex justify-between items-center p-2 rounded bg-white border border-[#e2e8f0] gap-2"
                   >
-                    <div className="truncate pr-2">
+                    {it.product.image && (
+                      <div className="w-10 h-10 rounded bg-[#f8fafc] border border-[#cbd5e1] overflow-hidden shrink-0">
+                        <img
+                          src={it.product.image}
+                          alt={it.product.name}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="truncate flex-1 min-w-0 pr-1">
                       <div className="font-bold text-[#0f172a] truncate">{it.product.name}</div>
                       <div className="text-[10px] text-[#64748b]">
                         Order {it.units} units @ ₹{it.product.wholesaleCost}

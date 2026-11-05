@@ -22,14 +22,14 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Zone 1: Brand Zone - Single clean wordmark */}
         <div className="flex items-center gap-3 shrink-0">
           <div className="w-9 h-9 rounded-lg bg-[#006948] flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
-            V
+            F
           </div>
           <button
             onClick={() => setActiveTab('counter')}
             className="text-left cursor-pointer group"
           >
             <span className="text-lg md:text-xl font-bold tracking-tight text-[#131b2e] group-hover:text-[#006948] transition-colors whitespace-nowrap">
-              Vibrant Merchant
+              Finora
             </span>
           </button>
         </div>

@@ -252,7 +252,7 @@ export default function App() {
       <footer className="bg-white border-t border-[#e2e8f0] py-4 px-6 text-center text-xs text-[#64748b]">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
-            Vibrant Merchant Intelligence © 2026 · Built for Indian Retail Kirana Merchants
+            Finora © 2026 · Built for Indian Retail Kirana Merchants
           </div>
           <div className="flex items-center gap-4 text-[11px]">
             <span>Fast Billing Hotkey: [F2]</span>

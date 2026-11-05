@@ -75,6 +75,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'ITC Wholesale Hub',
     dailyVelocity: 8.5,
+    image: '/src/assets/images/product_chakki_atta_1793885072378.jpg',
   },
   {
     id: 'prod-005',
@@ -93,6 +94,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Tata Consumer Depot',
     dailyVelocity: 14.0,
+    image: '/src/assets/images/product_tata_salt_1793885073768.jpg',
   },
   {
     id: 'prod-006',
@@ -111,6 +113,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Gujarat Milk Federation',
     dailyVelocity: 3.4,
+    image: '/src/assets/images/product_amul_butter_1793885074702.jpg',
   },
   {
     id: 'prod-007',
@@ -129,6 +132,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Metro Cash & Carry',
     dailyVelocity: 9.2,
+    image: '/src/assets/images/product_parle_biscuit_1793885094520.jpg',
   },
   {
     id: 'prod-008',
@@ -147,6 +151,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'low_stock',
     distributorName: 'Kailash Agro Wholesale',
     dailyVelocity: 5.5,
+    image: '/src/assets/images/product_toor_dal_1793885074056.jpg',
   },
   {
     id: 'prod-009',
@@ -165,6 +170,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'dead_stock',
     distributorName: 'HUL Direct Agency',
     dailyVelocity: 0.6,
+    image: '/src/assets/images/product_surf_detergent_1793885096298.jpg',
   },
   {
     id: 'prod-010',
@@ -183,6 +189,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Nestle City Supplier',
     dailyVelocity: 7.1,
+    image: '/src/assets/images/product_maggi_noodles_1793885075800.jpg',
   },
   {
     id: 'prod-011',
@@ -201,6 +208,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'optimal',
     distributorName: 'Reckitt Distributor',
     dailyVelocity: 2.8,
+    image: '/src/assets/images/product_dettol_soap_1793885096432.jpg',
   },
   {
     id: 'prod-012',
@@ -219,6 +227,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     status: 'low_stock',
     distributorName: 'Adani Wilmar Direct',
     dailyVelocity: 6.2,
+    image: '/src/assets/images/product_sunflower_oil_1793885098025.jpg',
   }
 ];
 
