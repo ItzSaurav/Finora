@@ -1,0 +1,223 @@
+---
+name: Vibrant Merchant Intelligence
+colors:
+  surface: '#faf8ff'
+  surface-dim: '#d2d9f4'
+  surface-bright: '#faf8ff'
+  surface-container-lowest: '#ffffff'
+  surface-container-low: '#f2f3ff'
+  surface-container: '#eaedff'
+  surface-container-high: '#e2e7ff'
+  surface-container-highest: '#dae2fd'
+  on-surface: '#131b2e'
+  on-surface-variant: '#3d4a42'
+  inverse-surface: '#283044'
+  inverse-on-surface: '#eef0ff'
+  outline: '#6d7a72'
+  outline-variant: '#bccac0'
+  surface-tint: '#006c4a'
+  primary: '#006948'
+  on-primary: '#ffffff'
+  primary-container: '#00855d'
+  on-primary-container: '#f5fff7'
+  inverse-primary: '#68dba9'
+  secondary: '#904d00'
+  on-secondary: '#ffffff'
+  secondary-container: '#fe932c'
+  on-secondary-container: '#663500'
+  tertiary: '#4b41e1'
+  on-tertiary: '#ffffff'
+  tertiary-container: '#645efb'
+  on-tertiary-container: '#fffbff'
+  error: '#ba1a1a'
+  on-error: '#ffffff'
+  error-container: '#ffdad6'
+  on-error-container: '#93000a'
+  primary-fixed: '#85f8c4'
+  primary-fixed-dim: '#68dba9'
+  on-primary-fixed: '#002114'
+  on-primary-fixed-variant: '#005137'
+  secondary-fixed: '#ffdcc3'
+  secondary-fixed-dim: '#ffb77d'
+  on-secondary-fixed: '#2f1500'
+  on-secondary-fixed-variant: '#6e3900'
+  tertiary-fixed: '#e2dfff'
+  tertiary-fixed-dim: '#c3c0ff'
+  on-tertiary-fixed: '#0f0069'
+  on-tertiary-fixed-variant: '#3323cc'
+  background: '#faf8ff'
+  on-background: '#131b2e'
+  surface-variant: '#dae2fd'
+typography:
+  display:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 36px
+    fontWeight: '800'
+    lineHeight: 44px
+    letterSpacing: -0.02em
+  display-mobile:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 28px
+    fontWeight: '800'
+    lineHeight: 34px
+    letterSpacing: -0.01em
+  headline-lg:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 30px
+    fontWeight: '700'
+    lineHeight: 38px
+    letterSpacing: -0.01em
+  headline-lg-mobile:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 24px
+    fontWeight: '700'
+    lineHeight: 32px
+    letterSpacing: -0.01em
+  headline-md:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 20px
+    fontWeight: '700'
+    lineHeight: 28px
+    letterSpacing: -0.005em
+  headline-sm:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 16px
+    fontWeight: '600'
+    lineHeight: 24px
+  body-lg:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 16px
+    fontWeight: '400'
+    lineHeight: 24px
+  body-md:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 14px
+    fontWeight: '400'
+    lineHeight: 20px
+  body-sm:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 12px
+    fontWeight: '500'
+    lineHeight: 16px
+  label-numeric:
+    fontFamily: JetBrains Mono
+    fontSize: 14px
+    fontWeight: '600'
+    lineHeight: 18px
+    letterSpacing: -0.01em
+  label-numeric-lg:
+    fontFamily: JetBrains Mono
+    fontSize: 22px
+    fontWeight: '700'
+    lineHeight: 26px
+    letterSpacing: -0.02em
+  label-badge:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 11px
+    fontWeight: '700'
+    lineHeight: 14px
+    letterSpacing: 0.04em
+rounded:
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
+  full: 9999px
+spacing:
+  gutter: 1rem
+  gutter-desktop: 1.5rem
+  margin: 1rem
+  margin-desktop: 2.5rem
+  space-2xs: 0.25rem
+  space-xs: 0.5rem
+  space-sm: 0.75rem
+  space-md: 1rem
+  space-lg: 1.5rem
+  space-xl: 2rem
+  space-2xl: 3rem
+---
+
+## Brand & Style
+
+This design system synthesizes high-utility B2B SaaS architecture with the approachable, tactile simplicity of modern Indian retail fintech. Designed specifically for neighborhood Kirana proprietors, the interface addresses high cognitive load, mixed-lighting shop environments, and hurried, one-handed mobile interactions during counter rush hours.
+
+The aesthetic blends **Modern Corporate SaaS** with **Tactile Functionalism**:
+- **Clarity over Abstraction:** Data is rendered through concrete financial numbers, product imagery, and distinct status signifiers rather than ambiguous charts.
+- **Approachable Prosperity:** The visual tone radiates stability, modern commerce, and earned trust, avoiding sterile hyper-minimalism or condescending toy-like motifs.
+- **Cognitive Legibility:** Information prioritization accommodates bilingual scanning, quick thumb navigation, and high-visibility status cues across varied ambient glare and entry-level phone screens.
+
+## Colors
+
+The palette balances clean foundational neutrals against authoritative semantic accents that mirror retail shelf actions:
+
+- **Primary (`#059669` / `#10B981`):** Growth Emerald. Signifies healthy margin, active inventory, verified wholesale credits, and positive net cash flow. Used for core actions, success indicators, and positive profit trends.
+- **Secondary (`#D97706` / `#F59E0B`):** Saffron Amber. Deployed for immediate attention states that are not yet catastrophic—such as stock expiring within 7 days, replenishment reorder points, and pending supplier invoices.
+- **Tertiary (`#4F46E5`):** Agent Indigo. Reserved strictly for automated AI intelligence: predictive restock recommendations, demand-forecasting callouts, automated voice-billings, and margin optimization logic.
+- **Neutral (`#0F172A` over `#F8FAFC`):** Deep Slate typography anchored against a crisp cool-canvas neutral base. Layered with subtle sub-neutrals (`#E2E8F0` for interior borders, `#64748B` for secondary captions) to guarantee WCAG AAA legibility under harsh counter lighting.
+- **Alert / Risk (`#E11D48`):** Crimson Rose. Reserved exclusively for working-capital leaks: expired stock, credit default risks, zero-inventory stockouts during peak festival seasons, and supplier price gouging warnings.
+
+## Typography
+
+The type system pairs **Plus Jakarta Sans** with **JetBrains Mono**:
+
+- **Plus Jakarta Sans:** Selected for its open counters, humanist warmth, and razor-sharp digital geometry. It balances geometric modernism with high legibility across Hindi, Tamil, Telugu, and English transliterated inventory strings.
+- **JetBrains Mono:** Dedicated exclusively to SKU numbers, barcode strings, working-capital rupee values (₹), profit margins, and supplier invoice totals. The tabular spacing prevents jitter in dynamic counters and makes quick glance-based audits effortless.
+- **Hierarchy Rules:** Large visual figures (Stock Units, Daily Revenue) take precedence over narrative text. All numeric values feature tabular alignment. Text truncation on item names is avoided by using two-line limits rather than single-line cutoffs.
+
+## Layout & Spacing
+
+The layout is built on an **8pt rhythmic coordinate grid** optimized for mobile-first handheld workflows while scaling into a multi-column desktop dashboard for back-office settlement:
+
+- **Mobile Viewport (< 640px):** Single-column stacked layouts with a fixed 48px touch-target minimum. Margins stay locked at `1rem` (16px) to maximize real-world screen estate. Vertical gaps between metric modules sit at `0.75rem` (12px) to pack actionable information above the fold.
+- **Tablet / Counter POS (640px – 1024px):** 6-column grid with `1rem` gutters. Splits invoice generation/barcode feeds to the left and live inventory intelligence cards to the right.
+- **Desktop Back-Office (> 1024px):** 12-column grid capped at 1440px total container width, using `1.5rem` (24px) gutters and `2.5rem` (40px) outer margins.
+- **Thumb-Zone Safety:** Crucial actions (Scan Product, Add Cash Credit, Voice AI Command) are placed strictly within the bottom 35% of the mobile screen canvas.
+
+## Elevation & Depth
+
+This system avoids heavy Skeuomorphism while rejecting completely flat UI to stay instantly recognizable under bright fluorescent retail lights:
+
+- **Layer 0 (Canvas Base):** Pure `#F8FAFC`. Non-interactive baseline surface.
+- **Layer 1 (Card & Module Surfaces):** Pure `#FFFFFF` resting with a crisp border: `1px solid #E2E8F0` coupled with an ultra-soft ambient drop: `0px 1px 3px rgba(15, 23, 42, 0.04), 0px 4px 12px rgba(15, 23, 42, 0.03)`.
+- **Layer 2 (Interactive Floating Surfaces / Action Trays):** Elevated modals, bottom sheets, and floating scan bars utilize: `0px 12px 32px -4px rgba(15, 23, 42, 0.12), 0px 4px 8px -2px rgba(15, 23, 42, 0.04)` surrounded by a boundary border `1px solid #CBD5E1`.
+- **AI Highlight Elevation:** AI predictive modules layer a subtle 1px dual gradient border (`#4F46E5` transitioning to transparent) combined with a soft tinted indigo ambient shadow: `0px 4px 20px rgba(79, 70, 229, 0.08)`.
+- **Alert Elevation:** Critical warnings (expiry/dead-stock) drop low-radius crimson halos (`0px 2px 8px rgba(225, 29, 72, 0.15)`) to immediately catch the eye in peripheral vision.
+
+## Shapes
+
+The design uses a balanced **Level 2 (Rounded)** shape scale that reflects modern software design without feeling childlike:
+
+- **Component Containers (Cards, Modals):** `0.75rem` (12px) to `1rem` (16px) corner radius, keeping card edges distinct on dense data tables.
+- **Buttons & Input Targets:** `0.5rem` (8px) to `0.75rem` (12px) corner radius. This gives form fields a structured, stable feel while leaving primary action triggers tactile and inviting.
+- **Badges, Tags & AI Chips:** Fully pill-shaped (`9999px`) to immediately signal metadata, category separation, and algorithmic status cues.
+- **Product Image Placeholders:** Fixed at `0.5rem` (8px) with internal inset borders to preserve the visual integrity of various distributor packagings.
+
+## Components
+
+### Buttons
+- **Primary (Action):** Solid Emerald (`#059669`) background with white bold typography, 0.75rem border radius, minimum 48px height for touch accuracy. On hover/active: `#047857`.
+- **Secondary (Utility):** White background, 1px solid border (`#CBD5E1`), Slate text (`#0F172A`). Used for actions like "Download Bill" or "View Distributor".
+- **AI Copilot Button:** Deep Indigo gradient (`#4F46E5` to `#6366F1`) with white text and an integrated spark icon.
+- **Destructive:** Rose background tint (`#FFF1F2`), 1px solid `#FECDD3`, crimson text (`#E11D48`).
+
+### Metric & Insight Cards
+- Built using pure white backgrounds, 12px border radius, and thin `#E2E8F0` borders.
+- Top section holds the localized title and category badge; middle showcases bold numbers in **JetBrains Mono**; bottom holds contextual trend badges (e.g., "+18% vs last week" in soft green pill containers).
+
+### AI Reasoning Badges & Insight Callouts
+- Indigo-tinted background (`#EEF2FF`), border `1px solid #C7D2FE`, indigo text (`#4338CA`).
+- Accompanied by a 6px pulsing emerald or indigo indicator dot to display live intelligence updates (e.g., "AI: 12 bags of Basmati Rice will stock out before Sunday").
+
+### Input Fields & Search Bars
+- High contrast, 48px tall targets. Inset white background with a crisp `#CBD5E1` border, transitioning to a focused 2px outline in `#059669`.
+- Includes instant clear buttons and an inline microphone icon for Hindi/English voice input.
+
+### Status Chips & Expiry Badges
+- **Low Stock / Expiry Warning:** Saffron base (`#FFFBEB`), amber text (`#B45309`), border `1px solid #FDE68A`.
+- **Dead Stock / Zero Inventory:** Rose base (`#FFF1F2`), crimson text (`#BE123C`), border `1px solid #FECDD3`.
+- **Optimal Margin:** Emerald base (`#ECFDF5`), green text (`#047857`), border `1px solid #A7F3D0`.
+
+### Lists & Inventory Rows
+- Separated by clean hairline borders (`#F1F5F9`). Every row contains SKU details on the left, an algorithmic status chip in the center, and large tabular stock counts on the right.
+- Touch states produce an immediate subtle neutral background shift (`#F8FAFC`).
